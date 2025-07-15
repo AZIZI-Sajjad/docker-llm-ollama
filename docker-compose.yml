@@ -1,0 +1,43 @@
+# docker compose --file /var/docker/docker-compose.d/docker-llm-ollama/docker-compose.yml --project-name llm-ollama config
+# docker compose --file /var/docker/docker-compose.d/docker-llm-ollama/docker-compose.yml --project-name llm-ollama up
+# docker compose --file /var/docker/docker-compose.d/docker-llm-ollama/docker-compose.yml --project-name llm-ollama down
+# docker compose --file /var/docker/docker-compose.d/docker-llm-ollama/docker-compose.yml --project-name llm-ollama up -d
+# docker compose --file /var/docker/docker-compose.d/docker-llm-ollama/docker-compose.yml --project-name llm-ollama logs -f
+
+version: "3.7"
+services:
+  ollama:
+      build:
+        context: .
+        dockerfile: ${OLLAMA_DOKCER_FILE}
+      env_file:
+        - ".env"
+      container_name: '${OLLAMA_CONTAINER_HOST_NAME}' # "container-ollama"
+      hostname: '${OLLAMA_CONTAINER_HOST_NAME}' # "container-ollama"
+      restart: always
+      ports:
+      # <Host_Port>:<Container_Port>
+      - "${OLLAMA_PORT}:${OLLAMA_PORT}"
+      networks:
+        # n8n-postgresql_net-bridge-n8n-postgres:
+        net-bridge-ollama:
+          ipv4_address: '${OLLAMA_CONTAINER_IP}' # '172.64.65.202'
+
+volumes:
+  ollama_vol: {}
+
+
+networks:
+  net-bridge-ollama:
+    name: '${BRIDGE_NETWORK_EXISTING}'
+    external: true
+
+
+# networks:
+#   net-bridge-n8n-postgres:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: '${BRIDGE_NETWORK_SUBNET}' # "172.64.64.0/24"
+#           gateway: '${BRIDGE_NETWORK_GW}' # "172.64.64.1"  
