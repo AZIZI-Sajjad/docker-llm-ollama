@@ -1,4 +1,4 @@
-## Source  
+## Source:
 ```bash
 https://github.com/acidtib/local-AI/tree/main  
 ```
